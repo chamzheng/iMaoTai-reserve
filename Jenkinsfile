@@ -1,5 +1,7 @@
 pipeline {
-    agent { image 'python:latest' }
+    agent { 
+        docker {image 'python:latest' }
+    }
 
     stages{
         stage('Activate Conda Envs') {
