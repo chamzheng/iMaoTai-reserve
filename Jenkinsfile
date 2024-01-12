@@ -4,7 +4,7 @@ pipeline {
     stages{
         stage('initWorkspace') {
             steps{
-                
+                echo "123"
             }
         }
     }
