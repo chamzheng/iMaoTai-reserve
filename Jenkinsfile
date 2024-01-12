@@ -1,10 +1,5 @@
 pipeline {
-    agent any
-
-    environment {
-        HTTPS_PROXY = 'socks5://192.168.30.7:7899'
-        HTTP_PROXY  = 'socks5://192.168.30.7:7899'
-    }
+    agent { image 'python:latest' }
 
     stages{
         stage('Activate Conda Envs') {
