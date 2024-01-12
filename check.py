@@ -54,12 +54,11 @@ for section in configs.sections():
     
     # 根据配置中，要预约的商品ID，城市 进行自动预约
     try:
-        r_content = process.get_result(mobile)
-        print(r_content)
+        s_content += process.get_result(mobile)
 
     except BaseException as e:
         print(e)
         logging.error(e)
 
 # 推送消息
-process.send_msg(s_title, r_content)
+process.send_msg(s_title, s_content)
