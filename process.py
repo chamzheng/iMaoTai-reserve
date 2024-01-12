@@ -336,3 +336,39 @@ def getUserEnergyAward(mobile: str):
     # response.json().get('message') if '无法领取奖励' in response.text else "领取奖励成功"
     logging.info(
         f'领取耐力 : mobile:{mobile} :  response code : {response.status_code}, response body : {response.text}')
+
+def get_result(mobile: str):
+
+    cookies = {
+        'MT-Device-ID-Wap': headers['MT-Device-ID'],
+        'MT-Token-Wap': headers['MT-Token'],
+        'YX_SUPPORT_WEBP': '1',
+    }
+    headers.pop("Content-Length", None)
+    headers.pop("Host", None)
+    url = "https://app.moutai519.com.cn/xhr/front/mall/reservation/list/pageOne/queryV2"
+    response = requests.get(url, headers=headers, cookies=cookies)
+
+    # response.json().get('message') if '无法领取奖励' in response.text else "领取奖励成功"
+    result = []
+    now = datetime.datetime.now()
+    today = datetime.datetime(now.year, now.month, now.day)
+    today_timestamp = int(today.timestamp()) * 1000
+    status_dict = {
+        0: "申购中",
+        1: "申购失败"
+    }
+    try:
+        for item in response.json()['data']['reservationItemVOS']:
+            if item['reservationTime'] > today_timestamp:
+                # logging.info(item)
+                itemName = item['itemName']
+                status = item['status']
+                cur = datetime.datetime.fromtimestamp(item['reservationTime'] // 1000).strftime("%Y-%m-%d")
+                result.append("申购时间:{} 申购项目:{} 申购状态:{}".format(cur, itemName, status_dict.get(status, "成功")))
+    except Exception as e:
+        pass
+    result_text = "\n".join(result)
+    # logging.info(
+    #    f'申购结果 : 手机号:{mobile} \n{result_text}')
+    return f'申购结果 : 手机号:{mobile} \n{result_text}'
